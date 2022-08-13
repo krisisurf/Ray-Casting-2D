@@ -26,7 +26,7 @@ public class RectangleEntity extends Entity {
     @Override
     public void render(Graphics g) {
         g.setColor(color);
-        ViewCamera cam = handler.getGameCamera();
+        ViewCamera cam = handler.getViewCamera();
         g.fillRect(cam.toScreenX(x), cam.toScreenY(y), getWidth(), getHeight());
     }
 
@@ -37,6 +37,6 @@ public class RectangleEntity extends Entity {
         int[] xpoints = {(int) x, xw, xw, (int) x};
         int[] ypoints = {(int) y, (int) y, yh, yh};
 
-        return new Shape(xpoints, ypoints, 4);
+        return new Shape(xpoints, ypoints, 4, this);
     }
 }
