@@ -22,8 +22,8 @@ public class RayCast2DState extends State {
         world = new World(handler);
         handler.setWorld(world);
 
-        //world.addEntity(new LampEntity(handler, handler.getWidth() / 2, handler.getHeight() / 2, 48, 350));
-        world.addEntity(new RayCastPointEntity(handler, handler.getWidth() / 2, handler.getHeight() / 2));
+        //world.addEntity(new RayCastPointEntity(handler, handler.getWidth() / 2, handler.getHeight() / 2));
+        world.addEntity(new LampEntity(handler, handler.getWidth() / 2, handler.getHeight() / 2, 500, 500));
 
         world.addEntity(new RectangleEntity(handler, 100, 250, 40, 400));
         world.addEntity(new RectangleEntity(handler, 900, 250, 30, 200));
@@ -38,6 +38,10 @@ public class RayCast2DState extends State {
         Shape customShape = new Shape(new int[]{250, 800, 800, 280, 280, 250}, new int[]{100, 100, 130, 130, 200, 200}, 6, null);
         Entity customShapeEntity = new CustomShapeEntity(handler, customShape);
         world.addEntity(customShapeEntity);
+
+        world.getEntities().forEach(e -> e.setVisible(false));
+        world.getEntities().get(0).setVisible(true);
+
     }
 
 
