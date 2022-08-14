@@ -10,10 +10,10 @@ import tracer.Ray;
 import utils.GeometryUtils;
 
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RayCastPointEntity extends Entity {
 
@@ -38,18 +38,18 @@ public class RayCastPointEntity extends Entity {
     }
 
     protected void move() {
-        float xSpeed = 3, ySpeed = 3;
+        float speed = 3.5f;
 
         KeyManager keyManager = handler.getKeyManager();
 
         if (keyManager.down)
-            y += ySpeed;
+            setLocationOffset(0, speed);
         else if (keyManager.up)
-            y -= ySpeed;
+            setLocationOffset(0, -speed);
         else if (keyManager.left)
-            x -= xSpeed;
+            setLocationOffset(-speed, 0);
         else if (keyManager.right)
-            x += xSpeed;
+            setLocationOffset(speed, 0);
 
     }
 
@@ -58,7 +58,7 @@ public class RayCastPointEntity extends Entity {
         ViewCamera cam = handler.getViewCamera();
 
         g.setColor(Color.RED);
-        g.fillOval(cam.toScreenX(x - 3), cam.toScreenY(y - 3), 6, 6);
+        g.fillOval(cam.toScreenX(getX() - 3), cam.toScreenY(getY() - 3), 6, 6);
 
         for (Ray r : rays) {
             r.drawRay(g, cam);
@@ -66,18 +66,17 @@ public class RayCastPointEntity extends Entity {
         }
     }
 
-    @Override
-    public Shape getShape() {
-        return null;
-    }
-
     private void castRays() {
         List<Vertex> vertices = new ArrayList<>();
         List<Segment> segments = new ArrayList<>();
 
-        handler.getWorld().getEntities().stream().filter(e -> e.getShape() != null).forEach(
+        handler.getWorld().getEntities().forEach(
                 e -> {
-                    Shape shape = e.getShape();
+                    Optional<Shape> shapeOptional = e.getShape();
+                    if (shapeOptional.isEmpty())
+                        return;
+
+                    Shape shape = shapeOptional.get();
                     vertices.addAll(shape.getVertices());
                     segments.addAll(shape.getSegments());
                 }
@@ -90,7 +89,7 @@ public class RayCastPointEntity extends Entity {
     }
 
     private Ray calculateRayAndIntersections(Vertex vertex, List<Segment> segments) {
-        Ray ray = new Ray(x, y, vertex.x, vertex.y);
+        Ray ray = new Ray(getX(), getY(), vertex.x, vertex.y);
 
         for (Segment s : segments) {
             Point2D.Float intersectionPoint = GeometryUtils.getLineIntersectionPoint(ray.getLine(), s.getLine());
