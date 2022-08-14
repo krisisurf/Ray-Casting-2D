@@ -1,6 +1,7 @@
 package environment.entities;
 
 import java.awt.*;
+import java.util.Optional;
 
 import environment.Handler;
 import environment.entities.utils.Shape;
@@ -8,26 +9,37 @@ import environment.entities.utils.Shape;
 public abstract class Entity {
 
     protected Handler handler;
-    protected float x, y;
+    private float x, y;
     private int width, height;
 
-    private boolean isUpdatable;
-    private boolean isVisible;
+    private boolean isUpdatable = true;
+    private boolean isVisible = true;
+
+    private Shape shape;
+
+    // Between updates variables
+    private boolean isMoved;
 
     public Entity(Handler handler, float x, float y, int width, int height) {
         this.handler = handler;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        setLocation(x, y);
+        setSize(width, height);
+    }
 
-        this.isUpdatable = true;
-        this.isVisible = true;
+    Entity(Handler handler){
+        this.handler = handler;
     }
 
     public final void updateFirst() {
-        if (isUpdatable)
-            update();
+        if (!isUpdatable)
+            return;
+
+        if (shape != null && isMoved) {
+            shape.setLocation((int) x, (int) y);
+            isMoved = false;
+        }
+
+        update();
     }
 
     public final void renderFirst(Graphics g) {
@@ -39,10 +51,14 @@ public abstract class Entity {
 
     public abstract void render(Graphics g);
 
-    /**
-     * @return dynamic entity shape calculated with position offset
-     */
-    public abstract Shape getShape();
+    public Optional<Shape> getShape() {
+        return Optional.ofNullable(shape);
+    }
+
+    public void setShape(Shape shape) {
+        this.shape = shape;
+        setLocation(x, y);
+    }
 
     public int getWidth() {
         return width;
@@ -52,9 +68,28 @@ public abstract class Entity {
         return height;
     }
 
+    public final void setLocation(float x, float y) {
+        this.x = x;
+        this.y = y;
+
+        isMoved = true;
+    }
+
+    public void setLocationOffset(float offsetX, float offsetY) {
+        setLocation(x + offsetX, y + offsetY);
+    }
+
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 
     public boolean isUpdatable() {

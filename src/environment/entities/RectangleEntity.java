@@ -12,11 +12,18 @@ public class RectangleEntity extends Entity {
 
     public RectangleEntity(Handler handler, float x, float y, int width, int height) {
         super(handler, x, y, width, height);
+        initShape();
     }
 
-    public RectangleEntity(Handler handler, Rectangle rectangle) {
-        super(handler, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    void initShape(){
+        int xw = (int) getX() + getWidth();
+        int yh = (int) getY() + getHeight();
+        int[] xpoints = {(int) getX(), xw, xw, (int) getX()};
+        int[] ypoints = {(int) getY(), (int) getY(), yh, yh};
+
+        setShape(new Shape(xpoints, ypoints, 4, this));
     }
+
 
     @Override
     public void update() {
@@ -27,16 +34,6 @@ public class RectangleEntity extends Entity {
     public void render(Graphics g) {
         g.setColor(color);
         ViewCamera cam = handler.getViewCamera();
-        g.fillRect(cam.toScreenX(x), cam.toScreenY(y), getWidth(), getHeight());
-    }
-
-    @Override
-    public Shape getShape() {
-        int xw = (int) x + getWidth();
-        int yh = (int) y + getHeight();
-        int[] xpoints = {(int) x, xw, xw, (int) x};
-        int[] ypoints = {(int) y, (int) y, yh, yh};
-
-        return new Shape(xpoints, ypoints, 4, this);
+        g.fillRect(cam.toScreenX(getX()), cam.toScreenY(getY()), getWidth(), getHeight());
     }
 }
