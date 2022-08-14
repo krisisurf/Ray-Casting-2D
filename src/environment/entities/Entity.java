@@ -18,16 +18,16 @@ public abstract class Entity {
     private Shape shape;
 
     // Between updates variables
-    private boolean isMoved = false;
+    private boolean isMoved;
 
     public Entity(Handler handler, float x, float y, int width, int height) {
         this.handler = handler;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-
         setLocation(x, y);
+        setSize(width, height);
+    }
+
+    Entity(Handler handler){
+        this.handler = handler;
     }
 
     public final void updateFirst() {
@@ -57,6 +57,7 @@ public abstract class Entity {
 
     public void setShape(Shape shape) {
         this.shape = shape;
+        setLocation(x, y);
     }
 
     public int getWidth() {
@@ -67,7 +68,7 @@ public abstract class Entity {
         return height;
     }
 
-    public void setLocation(float x, float y) {
+    public final void setLocation(float x, float y) {
         this.x = x;
         this.y = y;
 

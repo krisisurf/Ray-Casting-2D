@@ -9,7 +9,7 @@ import java.util.List;
 public class Shape {
 
     private final Polygon polygon;
-    private final Entity entity;
+    private Entity entity;
     private int originPointIndex = 0;
 
     private final List<Vertex> calculatedVertices;
@@ -25,7 +25,6 @@ public class Shape {
 
         calculatedVertices = new ArrayList<>(npoints);
         calculatedSegments = new ArrayList<>(npoints);
-
 
         for (int i = 0; i < polygon.npoints; i++)
             calculatedVertices.add(new Vertex(polygon.xpoints[i], polygon.ypoints[i], entity));
@@ -93,5 +92,9 @@ public class Shape {
 
     public Polygon getPolygon() {
         return polygon;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
     }
 }

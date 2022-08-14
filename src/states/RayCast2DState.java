@@ -4,6 +4,7 @@ import java.awt.*;
 
 import environment.Handler;
 import environment.entities.*;
+import environment.entities.utils.Shape;
 import environment.world.World;
 
 public class RayCast2DState extends State {
@@ -25,14 +26,18 @@ public class RayCast2DState extends State {
         world.addEntity(new RayCastPointEntity(handler, handler.getWidth() / 2, handler.getHeight() / 2));
 
         world.addEntity(new RectangleEntity(handler, 100, 250, 40, 400));
-        world.addEntity(new RectangleEntity(handler, 300, 100, 450, 30));
-        world.addEntity(new RectangleEntity(handler, 250, 200, 30, 150));
         world.addEntity(new RectangleEntity(handler, 900, 250, 30, 200));
         world.addEntity(new RectangleEntity(handler, 200, 550, 450, 30));
         world.addEntity(new RectangleEntity(handler, 150, 650, 780, 20));
 
         cross = new CrossShapeEntity(handler, 680, 440, 150, 150, 20);
-        //world.addEntity(cross);
+        world.addEntity(cross);
+
+        // By default, the origin point is point with index 0
+        // Check environment.entities.utils.Shape more detailed preview
+        Shape customShape = new Shape(new int[]{250, 800, 800, 280, 280, 250}, new int[]{100, 100, 130, 130, 200, 200}, 6, null);
+        Entity customShapeEntity = new CustomShapeEntity(handler, customShape);
+        world.addEntity(customShapeEntity);
     }
 
 
@@ -41,9 +46,9 @@ public class RayCast2DState extends State {
         world.update();
 
         // Demonstration purpose
-//        if (cross.getX() < 250 || cross.getX() > 680) speed = -speed;
-//
-//        cross.setLocation(cross.getX() + speed, cross.getY());
+        if (cross.getX() < 250 || cross.getX() > 680) speed = -speed;
+
+        cross.setLocation(cross.getX() + speed, cross.getY());
     }
 
     @Override
