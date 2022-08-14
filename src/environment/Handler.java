@@ -29,11 +29,11 @@ public class Handler {
 		return world;
 	}
 
-	public void setGameCamera(ViewCamera viewCamera) {
+	public void setViewCamera(ViewCamera viewCamera) {
 		viewController.setViewCamera(viewCamera);
 	}
 	
-	public ViewCamera getGameCamera() {
+	public ViewCamera getViewCamera() {
 		return viewController.getViewCamera();
 	}
 	
