@@ -1,10 +1,14 @@
 package environment.entities;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import environment.Handler;
+import environment.entities.utils.EntityModification;
 import environment.entities.utils.Shape;
+
+import java.util.List;
 
 public abstract class Entity {
 
@@ -20,17 +24,21 @@ public abstract class Entity {
     // Between updates variables
     private boolean isMoved;
 
+    private List<EntityModification> modifications;
+
     public Entity(Handler handler, float x, float y, int width, int height) {
-        this.handler = handler;
+        this(handler);
+
         setLocation(x, y);
         setSize(width, height);
     }
 
-    Entity(Handler handler){
+    Entity(Handler handler) {
         this.handler = handler;
+        modifications = new ArrayList<>();
     }
 
-    public final void updateFirst() {
+    public final void fixedUpdate() {
         if (!isUpdatable)
             return;
 
@@ -40,16 +48,28 @@ public abstract class Entity {
         }
 
         update();
+        modifications.forEach(EntityModification::lateUpdate);
     }
 
-    public final void renderFirst(Graphics g) {
-        if (isVisible)
-            render(g);
+    public final void fixedRender(Graphics g) {
+        if (!isVisible)
+            return;
+
+        render(g);
+        modifications.forEach(mod -> mod.lateRender(g));
     }
 
     public abstract void update();
 
     public abstract void render(Graphics g);
+
+    public void addModification(EntityModification entityModification) {
+        this.modifications.add(entityModification);
+    }
+
+    public void removeModification(EntityModification entityModification) {
+        this.modifications.remove(entityModification);
+    }
 
     public Optional<Shape> getShape() {
         return Optional.ofNullable(shape);
