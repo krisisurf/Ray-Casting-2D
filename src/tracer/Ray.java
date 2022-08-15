@@ -8,7 +8,9 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class Ray {
 
@@ -30,7 +32,7 @@ public class Ray {
         this(new Point2D.Float(xorigin, yorigin), new Point2D.Float(xdirection, ydirection));
     }
 
-    public void addIntersectionVertex(Point2D.Float location, Entity intersectedEntity){
+    public void addIntersectionVertex(Point2D.Float location, Entity intersectedEntity) {
         intersectionVertices.add(new Vertex(location, intersectedEntity));
     }
 
@@ -42,11 +44,22 @@ public class Ray {
         intersectionVertices.clear();
     }
 
-    /**
-     * @return copy of intersectionVertices list
-     */
     public List<Vertex> getIntersectionVertices() {
-        return intersectionVertices.stream().toList();
+        return intersectionVertices;
+    }
+
+    public List<Vertex> getIntersectionVerticesSorted() {
+        Comparator<Vertex> vertexComparator = Comparator.comparingDouble(v -> origin.distance(v));
+        return intersectionVertices.stream().sorted(vertexComparator).toList();
+    }
+
+    public Optional<Vertex> getClosestToOriginVertex() {
+        if (intersectionVertices.isEmpty())
+            return Optional.empty();
+
+        Comparator<Vertex> vertexComparator = Comparator.comparingDouble(v -> origin.distance(v));
+
+        return intersectionVertices.stream().min(vertexComparator);
     }
 
     public void drawRay(Graphics g, ViewCamera camera) {
@@ -56,7 +69,7 @@ public class Ray {
 
     public void drawIntersectionVertices(Graphics g, ViewCamera camera) {
         g.setColor(INTERSECTION_POINT_COLOR);
-        for(Point2D.Float p : intersectionVertices)
+        for (Point2D.Float p : intersectionVertices)
             g.drawOval(camera.toScreenX(p.x - 3), camera.toScreenY(p.y - 3), 6, 6);
     }
 

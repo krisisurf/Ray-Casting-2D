@@ -27,8 +27,8 @@ public class Launcher {
          * There are two ray cast entities to play with:
          * Uncomment the one you want to use!
          */
-        rayCastPointEntity(world);
-        //lampEntity(world);
+        //rayCastPointEntity(world);
+        lampEntity(world);
     }
 
     /**
