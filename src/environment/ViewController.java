@@ -6,7 +6,7 @@ import java.awt.image.BufferStrategy;
 import display.Display;
 import environment.camera.ViewCamera;
 import input.KeyManager;
-import states.RayCast2DState;
+import states.WorldState;
 import states.State;
 
 public class ViewController implements Runnable {
@@ -41,7 +41,7 @@ public class ViewController implements Runnable {
         viewCamera = new ViewCamera(0, 0);
 
         handler = new Handler(this);
-        State.currentState = new RayCast2DState(handler);
+        State.currentState = new WorldState(handler);
     }
 
     public void update() {
@@ -130,5 +130,9 @@ public class ViewController implements Runnable {
 
     public void setViewCamera(ViewCamera viewCamera) {
         this.viewCamera = viewCamera;
+    }
+
+    public Handler getHandler() {
+        return handler;
     }
 }

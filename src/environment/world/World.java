@@ -32,4 +32,8 @@ public class World {
 	public List<Entity> getEntities() {
 		return entityManager.getEntities();
 	}
+
+	public Handler getHandler() {
+		return handler;
+	}
 }

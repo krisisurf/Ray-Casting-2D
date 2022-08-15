@@ -18,12 +18,12 @@ public class EntityManager {
 	
 	public void update() {
 		for(Entity e : entities)
-			e.updateFirst();
+			e.fixedUpdate();
 	}
 	
 	public void render(Graphics g) {
 		for(Entity e : entities)
-			e.renderFirst(g);
+			e.fixedRender(g);
 	}
 	
 	public void addEntity(Entity e) {

@@ -57,13 +57,15 @@ public class RayCastPointEntity extends Entity {
     public void render(Graphics g) {
         ViewCamera cam = handler.getViewCamera();
 
-        g.setColor(Color.RED);
-        g.fillOval(cam.toScreenX(getX() - 3), cam.toScreenY(getY() - 3), 6, 6);
-
+        // Draw rays and intersection vertices
         for (Ray r : rays) {
             r.drawRay(g, cam);
             r.drawIntersectionVertices(g, cam);
         }
+
+        // Draw origin point
+        g.setColor(Color.YELLOW);
+        g.fillOval(cam.toScreenX(getX() - 5), cam.toScreenY(getY() - 5), 10, 10);
     }
 
     private void castRays() {
