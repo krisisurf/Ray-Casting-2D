@@ -4,6 +4,7 @@ import environment.Handler;
 import environment.camera.ViewCamera;
 import environment.entities.utils.Segment;
 import environment.entities.utils.Shape;
+import environment.entities.utils.Vertex;
 import input.KeyManager;
 import tracer.Ray;
 import utils.GeometryUtils;
@@ -20,6 +21,8 @@ public class LampEntity extends Entity {
     private final int raysQuantity;
     private float radius;
 
+    private Polygon lightPolygon;
+
     public LampEntity(Handler handler, float x, float y, int raysQuantity, float radius) {
         super(handler, x, y, 0, 0);
 
@@ -30,6 +33,11 @@ public class LampEntity extends Entity {
         rays = new ArrayList<>(raysQuantity);
         this.raysQuantity = raysQuantity;
         setRadius(radius);
+
+        lightPolygon = new Polygon();
+        lightPolygon.npoints = raysQuantity;
+        lightPolygon.xpoints = new int[raysQuantity];
+        lightPolygon.ypoints = new int[raysQuantity];
     }
 
     @Override
@@ -37,17 +45,22 @@ public class LampEntity extends Entity {
         shotRays();
     }
 
+
     @Override
     public void render(Graphics g) {
         ViewCamera cam = handler.getViewCamera();
 
+        g.setColor(Color.WHITE);
+        g.fillPolygon(lightPolygon);
+
         g.setColor(Color.YELLOW);
         g.fillOval(cam.toScreenX(getX() - 3), cam.toScreenY(getY() - 3), 6, 6);
 
-        rays.forEach(ray -> {
-            ray.drawRay(g, cam);
-            ray.drawIntersectionVertices(g, cam);
-        });
+        // Test purpose
+//        rays.forEach(ray -> {
+//            ray.drawRay(g, cam);
+//            ray.drawIntersectionVertices(g, cam);
+//        });
     }
 
     private void shotRays() {
@@ -55,23 +68,33 @@ public class LampEntity extends Entity {
         for (int i = 0; i < raysQuantity; i++) {
             double angle = i * (360.0 / raysQuantity);
             Ray ray = new Ray(getX(), getY(), getX() + (float) GeometryUtils.getLocationXOnCircle(angle, radius), getY() + (float) GeometryUtils.getLocationYOnCircle(angle, radius));
+
+            for (Entity entity : handler.getWorld().getEntities()) {
+                Optional<Shape> shapeOptional = entity.getShape();
+                if (shapeOptional.isEmpty())
+                    continue;
+
+                Shape shape = shapeOptional.get();
+                for (Segment segment : shape.getSegments()) {
+                    Point2D.Float intersectionPoint = GeometryUtils.getLineIntersectionPoint(ray.getLine(), segment.getLine());
+
+                    if (intersectionPoint != null)
+                        ray.addIntersectionVertex(intersectionPoint, segment.getEntity());
+                }
+            }
+
+            Optional<Vertex> closestToOriginVertex = ray.getClosestToOriginVertex();
+            Vertex firstIntersectedVertex;
+
+            if (closestToOriginVertex.isEmpty()) {
+                firstIntersectedVertex = new Vertex(ray.getDirection(), null);
+            } else {
+                firstIntersectedVertex = closestToOriginVertex.get();
+            }
+
+            lightPolygon.xpoints[i] = (int) firstIntersectedVertex.x;
+            lightPolygon.ypoints[i] = (int) firstIntersectedVertex.y;
             rays.add(ray);
-
-            handler.getWorld().getEntities().forEach(
-                    e -> {
-                        Optional<Shape> shapeOptional = e.getShape();
-                        if (shapeOptional.isEmpty())
-                            return;
-
-                        Shape shape = shapeOptional.get();
-                        for (Segment segment : shape.getSegments()) {
-                            Point2D.Float intersectionPoint = GeometryUtils.getLineIntersectionPoint(ray.getLine(), segment.getLine());
-
-                            if (intersectionPoint != null)
-                                ray.addIntersectionVertex(intersectionPoint, segment.getEntity());
-                        }
-                    }
-            );
         }
     }
 
