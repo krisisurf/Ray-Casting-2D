@@ -1,12 +1,11 @@
 # Ray-Casting-2D
-Basic REAL-TIME raycasting system for 2D environment made in java
+Basic REAL-TIME raycasting system for 2D environment made in java. </br>
+You can use (W, A, S, D) keys to move the RayCastingPointEntity or LampEntity. </br>
+<sub>NOTE: A more detailed object-oriented structure might exist because the original idea wasn't exactly like it is now.</sub>
 
-You can use (W, A, S, D) keys to move the RayCastingPointEntity or LampEntity
-The main things to play with are documented demonstrated in the main class ( src/environment/Launcher.java )
-
-NOTE: A more detailed object-oriented structure might exist because the original idea wasn't exactly like it is now.
-</br></br></br>
-Example images:
+***The main things to play with are documented demonstrated in the main class ( src/environment/Launcher.java )***
+</br></br>
+</br>
 
 ### RayCastPointEntity
 Shots rays to every vertex/point of the entities of the world and finds the intersection points of the segments that cross its path.</br></br>
@@ -22,4 +21,3 @@ Simulates light in 2D world. Basically renders the 2D-eye visible area from a si
 </br>
 ### Option to select a RayCastingPointEntity or LampEntity</br>
 ![image](https://user-images.githubusercontent.com/61236255/184735263-23642f97-e71c-433e-a15e-420da7aaedf9.png)
-
