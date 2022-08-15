@@ -41,7 +41,10 @@ public class Launcher {
         Handler handler = world.getHandler();
         RayCastPointEntity rayCastPointEntity = new RayCastPointEntity(handler, (float) handler.getWidth() / 2, (float) handler.getHeight() / 2);
         world.addEntity(rayCastPointEntity);
-        rayCastPointEntity.addModification(entityModificationForMoving(rayCastPointEntity));
+
+        // Make rayCastPointEntity movable
+        EntityModification mod = entityModificationForMoving(rayCastPointEntity, 2.5f);
+        rayCastPointEntity.addModification(mod);
     }
 
     /**
@@ -51,34 +54,11 @@ public class Launcher {
     public static void lampEntity(World world) {
         Handler handler = world.getHandler();
         LampEntity lampEntity = new LampEntity(handler, (float) handler.getWidth() / 2, (float) handler.getHeight() / 2, 500, 250);
-        lampEntity.addModification(entityModificationForMoving(lampEntity));
         world.addEntity(lampEntity);
-    }
 
-    private static EntityModification entityModificationForMoving(Entity entityToMove) {
-        EntityModification movingModification = new EntityModification() {
-            @Override
-            public void earlyUpdate() {
-                move(entityToMove, 3.5f);
-            }
-
-            @Override
-            public void earlyRender(Graphics g) {
-
-            }
-
-            @Override
-            public void lateUpdate() {
-
-            }
-
-            @Override
-            public void lateRender(Graphics g) {
-
-            }
-        };
-
-        return movingModification;
+        // Make lampEntity movable
+        EntityModification mod = entityModificationForMoving(lampEntity, 2.5f);
+        lampEntity.addModification(mod);
     }
 
     /**
@@ -97,6 +77,7 @@ public class Launcher {
         // Adding cross shaped entity which is moving, because of the added EntityModification
         CrossShapeEntity cross = new CrossShapeEntity(handler, 680, 440, 150, 150, 20);
         world.addEntity(cross);
+        // Creates an animation for moving left and right through the world
         cross.addModification(new EntityModification() {
             float speed = 0.7f;
 
@@ -136,16 +117,45 @@ public class Launcher {
 //        world.addEntity(customShapeEntity2);
     }
 
-    private static void move(Entity entity, float speed) {
-        KeyManager keyManager = entity.getHandler().getKeyManager();
+    /**
+     * Creates an entity modification object which allows entity to be moved with [W, A, S, D] keyboard keys
+     *
+     * @param entityToMove entity for which the move will work. <p>Note that the modification will be not applied yet. It will be only, when the modification get added to an entity.</p>.
+     * @param speed        speed with which the entity will be moved after [ W | A | S | D ] key get pressed.
+     * @return new instance of EntityModification with purpose for moving entity
+     */
+    private static EntityModification entityModificationForMoving(Entity entityToMove, float speed) {
+        EntityModification movingModification = new EntityModification() {
+            @Override
+            public void earlyUpdate() {
+                KeyManager keyManager = entityToMove.getHandler().getKeyManager();
 
-        if (keyManager.isDown())
-            entity.setLocationOffset(0, speed);
-        else if (keyManager.isUp())
-            entity.setLocationOffset(0, -speed);
-        else if (keyManager.isLeft())
-            entity.setLocationOffset(-speed, 0);
-        else if (keyManager.isRight())
-            entity.setLocationOffset(speed, 0);
+                if (keyManager.isDown())
+                    entityToMove.setLocationOffset(0, speed);
+                else if (keyManager.isUp())
+                    entityToMove.setLocationOffset(0, -speed);
+                else if (keyManager.isLeft())
+                    entityToMove.setLocationOffset(-speed, 0);
+                else if (keyManager.isRight())
+                    entityToMove.setLocationOffset(speed, 0);
+            }
+
+            @Override
+            public void earlyRender(Graphics g) {
+
+            }
+
+            @Override
+            public void lateUpdate() {
+
+            }
+
+            @Override
+            public void lateRender(Graphics g) {
+
+            }
+        };
+
+        return movingModification;
     }
 }
