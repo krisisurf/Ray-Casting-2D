@@ -41,7 +41,7 @@ public class Launcher {
             rayCastPointEntity(world);
         else if (result == 1)
             lampEntity(world);
-        else if (result == 2) {
+        else if (result == 2 || result == JOptionPane.CLOSED_OPTION) {
             viewController.stop();
             System.exit(1);
         }
@@ -77,6 +77,7 @@ public class Launcher {
 
     /**
      * <h2>Adds different obstacle entities to the world.</h2>
+     *
      * @see environment.world.World
      * @see environment.entities.Entity
      * @see environment.entities.EntityManager
