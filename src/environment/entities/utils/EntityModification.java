@@ -3,6 +3,19 @@ package environment.entities.utils;
 import java.awt.*;
 
 public abstract class EntityModification {
+
+    /**
+     * Updates entity after fixedUpdate() and before update(), lateUpdate()
+     */
+    public abstract void earlyUpdate();
+
+    /**
+     * Renders entity after fixedRender(...) and before render(...), lateRender(...)
+     *
+     * @param g Graphics
+     */
+    public abstract void earlyRender(Graphics g);
+
     /**
      * Updates entity right after update()
      */

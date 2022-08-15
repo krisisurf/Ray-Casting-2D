@@ -7,6 +7,7 @@ import java.util.Optional;
 import environment.Handler;
 import environment.entities.utils.EntityModification;
 import environment.entities.utils.Shape;
+import input.KeyManager;
 
 import java.util.List;
 
@@ -47,6 +48,7 @@ public abstract class Entity {
             isMoved = false;
         }
 
+        modifications.forEach(EntityModification::earlyUpdate);
         update();
         modifications.forEach(EntityModification::lateUpdate);
     }
@@ -55,6 +57,7 @@ public abstract class Entity {
         if (!isVisible)
             return;
 
+        modifications.forEach(mod -> mod.earlyRender(g));
         render(g);
         modifications.forEach(mod -> mod.lateRender(g));
     }
@@ -136,5 +139,9 @@ public abstract class Entity {
                 ", width=" + width +
                 ", height=" + height +
                 '}';
+    }
+
+    public Handler getHandler() {
+        return handler;
     }
 }
