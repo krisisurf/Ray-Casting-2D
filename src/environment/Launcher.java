@@ -6,6 +6,7 @@ import environment.entities.utils.Shape;
 import environment.world.World;
 import input.KeyManager;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Launcher {
@@ -25,12 +26,25 @@ public class Launcher {
         World world = viewController.getHandler().getWorld();
         addEntitiesToWorld(world);
 
-        /**
-         * There are two ray cast entities to play with:
-         * Uncomment the one you want to use!
-         */
-        //rayCastPointEntity(world);
-        lampEntity(world);
+        int result = JOptionPane.showOptionDialog(null,
+                "Which entity you would like to test?",
+                "Ray-Cast 2D",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                new Object[]{"RayCastPointEntity",
+                        "LampEntity",
+                        "Quit"},
+                null);
+
+        if (result == 0)
+            rayCastPointEntity(world);
+        else if (result == 1)
+            lampEntity(world);
+        else if (result == 2) {
+            viewController.stop();
+            System.exit(1);
+        }
     }
 
     /**
@@ -62,7 +76,10 @@ public class Launcher {
     }
 
     /**
-     * <h2>Adds different obstacles to the world.</h2>
+     * <h2>Adds different obstacle entities to the world.</h2>
+     * @see environment.world.World
+     * @see environment.entities.Entity
+     * @see environment.entities.EntityManager
      */
     private static void addEntitiesToWorld(World world) {
         Handler handler = world.getHandler();
@@ -110,11 +127,6 @@ public class Launcher {
         environment.entities.utils.Shape customShape = new Shape(new int[]{250, 800, 800, 280, 280, 250}, new int[]{100, 100, 130, 130, 200, 200}, 6, null);
         Entity customShapeEntity = new CustomShapeEntity(handler, customShape);
         world.addEntity(customShapeEntity);
-
-        // TODO: Make new custom shaped entity
-//        environment.entities.utils.Shape customShape2 = new Shape(new int[]{}, new int[]{100, 100, 130, 130, 200, 200}, 6, null);
-//        Entity customShapeEntity2 = new CustomShapeEntity(handler, customShape2);
-//        world.addEntity(customShapeEntity2);
     }
 
     /**
@@ -123,9 +135,13 @@ public class Launcher {
      * @param entityToMove entity for which the move will work. <p>Note that the modification will be not applied yet. It will be only, when the modification get added to an entity.</p>.
      * @param speed        speed with which the entity will be moved after [ W | A | S | D ] key get pressed.
      * @return new instance of EntityModification with purpose for moving entity
+     * @see environment.entities.utils.EntityModification
+     * @see environment.entities.Entity
+     * @see Entity#fixedUpdate()
      */
     private static EntityModification entityModificationForMoving(Entity entityToMove, float speed) {
-        EntityModification movingModification = new EntityModification() {
+
+        return new EntityModification() {
             @Override
             public void earlyUpdate() {
                 KeyManager keyManager = entityToMove.getHandler().getKeyManager();
@@ -155,7 +171,5 @@ public class Launcher {
 
             }
         };
-
-        return movingModification;
     }
 }

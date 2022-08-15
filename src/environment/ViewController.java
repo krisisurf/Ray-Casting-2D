@@ -114,8 +114,8 @@ public class ViewController implements Runnable {
             return;
 
         try {
-            thread.join();
             running = false;
+            thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
