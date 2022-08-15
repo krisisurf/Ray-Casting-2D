@@ -34,26 +34,7 @@ public class LampEntity extends Entity {
 
     @Override
     public void update() {
-        rays.clear();
-        move();
-
         shotRays();
-    }
-
-    protected void move() {
-        float speed = 3.5f;
-
-        KeyManager keyManager = handler.getKeyManager();
-
-        if (keyManager.down)
-            setLocationOffset(0, speed);
-        else if (keyManager.up)
-           setLocationOffset(0, -speed);
-        else if (keyManager.left)
-           setLocationOffset(-speed, 0);
-        else if (keyManager.right)
-            setLocationOffset(speed, 0);
-
     }
 
     @Override
@@ -70,6 +51,7 @@ public class LampEntity extends Entity {
     }
 
     private void shotRays() {
+        rays.clear();
         for (int i = 0; i < raysQuantity; i++) {
             double angle = i * (360.0 / raysQuantity);
             Ray ray = new Ray(getX(), getY(), getX() + (float) GeometryUtils.getLocationXOnCircle(angle, radius), getY() + (float) GeometryUtils.getLocationYOnCircle(angle, radius));

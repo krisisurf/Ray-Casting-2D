@@ -6,6 +6,7 @@ import java.awt.image.BufferStrategy;
 import display.Display;
 import environment.camera.ViewCamera;
 import input.KeyManager;
+import input.MouseManager;
 import states.WorldState;
 import states.State;
 
@@ -24,6 +25,7 @@ public class ViewController implements Runnable {
 
     //Input
     private KeyManager keyManager;
+    private MouseManager mouseManager;
 
     //Camera
     private ViewCamera viewCamera;
@@ -36,11 +38,14 @@ public class ViewController implements Runnable {
     }
 
     private void init() {
-        keyManager = new KeyManager();
-        display.addKeyListener(keyManager);
+        handler = new Handler(this);
         viewCamera = new ViewCamera(0, 0);
 
-        handler = new Handler(this);
+        keyManager = new KeyManager();
+        mouseManager = new MouseManager();
+        display.addKeyListener(keyManager);
+        display.addMouseListener(mouseManager);
+
         State.currentState = new WorldState(handler);
     }
 
@@ -122,6 +127,10 @@ public class ViewController implements Runnable {
 
     public KeyManager getKeyManager() {
         return keyManager;
+    }
+
+    public MouseManager getMouseManager() {
+        return mouseManager;
     }
 
     public ViewCamera getViewCamera() {

@@ -5,7 +5,6 @@ import environment.camera.ViewCamera;
 import environment.entities.utils.Segment;
 import environment.entities.utils.Shape;
 import environment.entities.utils.Vertex;
-import input.KeyManager;
 import tracer.Ray;
 import utils.GeometryUtils;
 
@@ -17,7 +16,7 @@ import java.util.Optional;
 
 public class RayCastPointEntity extends Entity {
 
-    List<Ray> rays;
+    private final List<Ray> rays;
 
     public RayCastPointEntity(Handler handler, float x, float y) {
         super(handler, x, y, 0, 0);
@@ -26,31 +25,8 @@ public class RayCastPointEntity extends Entity {
     }
 
     @Override
-    public final void update() {
-        move();
-        rays.clear();
+    public void update() {
         castRays();
-
-        updateThird();
-    }
-
-    public void updateThird() {
-    }
-
-    protected void move() {
-        float speed = 3.5f;
-
-        KeyManager keyManager = handler.getKeyManager();
-
-        if (keyManager.down)
-            setLocationOffset(0, speed);
-        else if (keyManager.up)
-            setLocationOffset(0, -speed);
-        else if (keyManager.left)
-            setLocationOffset(-speed, 0);
-        else if (keyManager.right)
-            setLocationOffset(speed, 0);
-
     }
 
     @Override
@@ -68,10 +44,12 @@ public class RayCastPointEntity extends Entity {
         g.fillOval(cam.toScreenX(getX() - 5), cam.toScreenY(getY() - 5), 10, 10);
     }
 
-    private void castRays() {
+    protected final void castRays() {
+        rays.clear();
         List<Vertex> vertices = new ArrayList<>();
         List<Segment> segments = new ArrayList<>();
 
+        // Find all vertices and segments
         handler.getWorld().getEntities().forEach(
                 e -> {
                     Optional<Shape> shapeOptional = e.getShape();

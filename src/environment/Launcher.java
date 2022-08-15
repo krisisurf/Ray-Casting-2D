@@ -4,6 +4,7 @@ import environment.entities.*;
 import environment.entities.utils.EntityModification;
 import environment.entities.utils.Shape;
 import environment.world.World;
+import input.KeyManager;
 
 import java.awt.*;
 
@@ -14,6 +15,7 @@ public class Launcher {
      * <h2>You can use (W, A, S, D) keys to move the RayCasting Point</h2>
      * <p>Basic REAL-TIME ray-casting system for 2D environment made in java.</p>
      * <p>NOTE: A more detailed object-oriented structure might exist because the original idea wasn't exactly like it is now.</p>
+     *
      * @param args nothing to do with the args
      */
     public static void main(String[] args) {
@@ -37,7 +39,9 @@ public class Launcher {
      */
     public static void rayCastPointEntity(World world) {
         Handler handler = world.getHandler();
-        world.addEntity(new RayCastPointEntity(handler, (float) handler.getWidth() / 2, (float) handler.getHeight() / 2));
+        RayCastPointEntity rayCastPointEntity = new RayCastPointEntity(handler, (float) handler.getWidth() / 2, (float) handler.getHeight() / 2);
+        world.addEntity(rayCastPointEntity);
+        rayCastPointEntity.addModification(entityModificationForMoving(rayCastPointEntity));
     }
 
     /**
@@ -46,9 +50,36 @@ public class Launcher {
      */
     public static void lampEntity(World world) {
         Handler handler = world.getHandler();
-        world.addEntity(new LampEntity(handler, (float) handler.getWidth() / 2, (float) handler.getHeight() / 2, 500, 250));
+        LampEntity lampEntity = new LampEntity(handler, (float) handler.getWidth() / 2, (float) handler.getHeight() / 2, 500, 250);
+        lampEntity.addModification(entityModificationForMoving(lampEntity));
+        world.addEntity(lampEntity);
     }
 
+    private static EntityModification entityModificationForMoving(Entity entityToMove) {
+        EntityModification movingModification = new EntityModification() {
+            @Override
+            public void earlyUpdate() {
+                move(entityToMove, 3.5f);
+            }
+
+            @Override
+            public void earlyRender(Graphics g) {
+
+            }
+
+            @Override
+            public void lateUpdate() {
+
+            }
+
+            @Override
+            public void lateRender(Graphics g) {
+
+            }
+        };
+
+        return movingModification;
+    }
 
     /**
      * <h2>Adds different obstacles to the world.</h2>
@@ -70,6 +101,16 @@ public class Launcher {
             float speed = 0.7f;
 
             @Override
+            public void earlyUpdate() {
+                // Nothing happens in here
+            }
+
+            @Override
+            public void earlyRender(Graphics g) {
+                // Nothing happens in here
+            }
+
+            @Override
             public void lateUpdate() {
                 if (cross.getX() < 250 || cross.getX() > 680) speed = -speed;
 
@@ -88,6 +129,23 @@ public class Launcher {
         environment.entities.utils.Shape customShape = new Shape(new int[]{250, 800, 800, 280, 280, 250}, new int[]{100, 100, 130, 130, 200, 200}, 6, null);
         Entity customShapeEntity = new CustomShapeEntity(handler, customShape);
         world.addEntity(customShapeEntity);
+
+        // TODO: Make new custom shaped entity
+//        environment.entities.utils.Shape customShape2 = new Shape(new int[]{}, new int[]{100, 100, 130, 130, 200, 200}, 6, null);
+//        Entity customShapeEntity2 = new CustomShapeEntity(handler, customShape2);
+//        world.addEntity(customShapeEntity2);
     }
 
+    private static void move(Entity entity, float speed) {
+        KeyManager keyManager = entity.getHandler().getKeyManager();
+
+        if (keyManager.isDown())
+            entity.setLocationOffset(0, speed);
+        else if (keyManager.isUp())
+            entity.setLocationOffset(0, -speed);
+        else if (keyManager.isLeft())
+            entity.setLocationOffset(-speed, 0);
+        else if (keyManager.isRight())
+            entity.setLocationOffset(speed, 0);
+    }
 }
