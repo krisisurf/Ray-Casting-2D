@@ -5,16 +5,20 @@ import javax.swing.*;
 public class PopupOptionsUI extends JOptionPane {
 
     public PopupOptionsUI(String title, String message, PopupOption...options){
-        int result = JOptionPane.showOptionDialog(null,
-                message,
-                title,
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                options,
-                null);
+        Thread t = new Thread(() -> {
+            int result = JOptionPane.showOptionDialog(null,
+                    message,
+                    title,
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    null);
 
-        options[result].onClick();
+            options[result].onClick();
+        });
+
+        t.start();
     }
 
     public static abstract class PopupOption{

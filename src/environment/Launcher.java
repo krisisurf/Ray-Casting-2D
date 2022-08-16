@@ -9,7 +9,6 @@ import environment.world.World;
 import input.KeyManager;
 import input.MouseManager;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.Optional;
@@ -136,6 +135,10 @@ public class Launcher {
         environment.entities.utils.Shape customShape = new Shape(new int[]{250, 800, 800, 280, 280, 250}, new int[]{100, 100, 130, 130, 200, 200}, 6, null);
         Entity customShapeEntity = new CustomShapeEntity(handler, customShape);
         world.addEntity(customShapeEntity);
+
+        // Add a modification for editing to all entities on the world
+        for (Entity e : world.getEntities())
+            e.addModification(entityModificationForEditing(e));
     }
 
     /**
@@ -181,7 +184,7 @@ public class Launcher {
         };
     }
 
-    public EntityModification entityModificationForEditing(Entity entity) {
+    private static EntityModification entityModificationForEditing(Entity entity) {
 
         return new EntityModification() {
             private Point screenPointPressed = new Point();
@@ -203,12 +206,15 @@ public class Launcher {
                 if (isBeingEdited)
                     return;
 
-                MouseManager mouseManager = entity.getHandler().getMouseManager();
-                ViewCamera viewCamera = entity.getHandler().getViewCamera();
+                Handler handler = entity.getHandler();
+
+                MouseManager mouseManager = handler.getMouseManager();
+                ViewCamera viewCamera = handler.getViewCamera();
 
                 if (!mouseManager.isLeftPressed())
                     return;
 
+                System.out.println("pressed");
                 screenPointPressed.setLocation(mouseManager.getMouseX(), mouseManager.getMouseY());
                 worldPointPressed.setLocation(viewCamera.toWorldX(screenPointPressed.x), viewCamera.toWorldY(screenPointPressed.y));
 
@@ -223,7 +229,22 @@ public class Launcher {
 
                 isBeingEdited = true;
 
-
+                mouseManager.reset();
+                new PopupOptionsUI("Editing entity", "Select an option",
+                        new PopupOptionsUI.PopupOption("Delete") {
+                            @Override
+                            public void onClick() {
+                                isBeingEdited = false;
+                                handler.getWorld().getEntities().remove(entity);
+                            }
+                        },
+                        new PopupOptionsUI.PopupOption("Cancel") {
+                            @Override
+                            public void onClick() {
+                                isBeingEdited = false;
+                            }
+                        }
+                );
             }
 
             @Override

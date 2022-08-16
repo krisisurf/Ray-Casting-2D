@@ -3,6 +3,7 @@ package input;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Arrays;
 
 public class MouseManager implements MouseListener, MouseMotionListener {
 
@@ -78,7 +79,9 @@ public class MouseManager implements MouseListener, MouseMotionListener {
     @Override
     public void mouseExited(MouseEvent e) {
         // TODO Auto-generated method stub
-
     }
 
+    public void reset(){
+        Arrays.fill(buttons, false);
+    }
 }

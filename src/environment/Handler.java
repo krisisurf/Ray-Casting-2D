@@ -45,4 +45,8 @@ public class Handler {
     public MouseManager getMouseManager() {
         return viewController.getMouseManager();
     }
+
+    public ViewController getViewController() {
+        return viewController;
+    }
 }

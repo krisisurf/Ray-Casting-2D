@@ -44,16 +44,18 @@ public class ViewController implements Runnable {
         keyManager = new KeyManager();
         mouseManager = new MouseManager();
         display.addKeyListener(keyManager);
-        display.addMouseListener(mouseManager);
+        display.getCanvas().addMouseListener(mouseManager);
+        display.getCanvas().addMouseMotionListener(mouseManager);
 
         State.currentState = new WorldState(handler);
     }
 
     public void update() {
+        keyManager.update();
+        mouseManager.update();
+
         if (State.currentState != null)
             State.currentState.update();
-
-        keyManager.update();
     }
 
     public void render() {

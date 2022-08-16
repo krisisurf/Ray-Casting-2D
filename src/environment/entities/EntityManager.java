@@ -17,13 +17,13 @@ public class EntityManager {
 	}
 	
 	public void update() {
-		for(Entity e : entities)
-			e.fixedUpdate();
+		for(int i = 0; i < entities.size(); i++)
+			entities.get(i).fixedUpdate();
 	}
 	
 	public void render(Graphics g) {
-		for(Entity e : entities)
-			e.fixedRender(g);
+		for(int i = 0; i < entities.size(); i++)
+			entities.get(i).fixedRender(g);
 	}
 	
 	public void addEntity(Entity e) {
