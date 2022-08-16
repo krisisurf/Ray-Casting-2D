@@ -1,5 +1,5 @@
 # Ray-Casting-2D
-Basic REAL-TIME raycasting system for 2D environment made in java
+Basic REAL-TIME raycasting system for 2D com.raycast.project.environment made in java
 
 You can use (W, A, S, D) keys to move the RayCasting Point
 
