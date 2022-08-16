@@ -1,13 +1,17 @@
 package environment;
 
+import environment.camera.ViewCamera;
 import environment.entities.*;
 import environment.entities.utils.EntityModification;
 import environment.entities.utils.Shape;
 import environment.world.World;
 import input.KeyManager;
+import input.MouseManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.Optional;
 
 public class Launcher {
 
@@ -97,7 +101,7 @@ public class Launcher {
         world.addEntity(cross);
         // Creates an animation for moving left and right through the world
         cross.addModification(new EntityModification() {
-            float speed = 0.7f;
+            private float speed = 0.7f;
 
             @Override
             public void earlyUpdate() {
@@ -141,7 +145,6 @@ public class Launcher {
      * @see Entity#fixedUpdate()
      */
     private static EntityModification entityModificationForMoving(Entity entityToMove, float speed) {
-
         return new EntityModification() {
             @Override
             public void earlyUpdate() {
@@ -164,6 +167,58 @@ public class Launcher {
 
             @Override
             public void lateUpdate() {
+
+            }
+
+            @Override
+            public void lateRender(Graphics g) {
+
+            }
+        };
+    }
+
+    public EntityModification entityModificationForEditing(Entity entity) {
+
+        return new EntityModification() {
+            private Point screenPointPressed = new Point();
+            private Point2D.Float worldPointPressed = new Point2D.Float();
+            private boolean isBeingEdited = false;
+
+            @Override
+            public void earlyUpdate() {
+
+            }
+
+            @Override
+            public void earlyRender(Graphics g) {
+
+            }
+
+            @Override
+            public void lateUpdate() {
+                if (isBeingEdited)
+                    return;
+
+                MouseManager mouseManager = entity.getHandler().getMouseManager();
+                ViewCamera viewCamera = entity.getHandler().getViewCamera();
+
+                if (!mouseManager.isLeftPressed())
+                    return;
+
+                screenPointPressed.setLocation(mouseManager.getMouseX(), mouseManager.getMouseY());
+                worldPointPressed.setLocation(viewCamera.toWorldX(screenPointPressed.x), viewCamera.toWorldY(screenPointPressed.y));
+
+                // Not every entity has a shape
+                Optional<Shape> optionalShape = entity.getShape();
+                if (optionalShape.isEmpty())
+                    return;
+
+                Shape shape = optionalShape.get();
+                if (!shape.getPolygon().contains(worldPointPressed))
+                    return;
+
+                isBeingEdited = true;
+
 
             }
 

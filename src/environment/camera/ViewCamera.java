@@ -20,6 +20,14 @@ public class ViewCamera {
 	public int toScreenY(float objectY) {
 		return (int) (objectY - yOffset);
 	}
+
+	public float toWorldX(int screenX){
+		return screenX - xOffset;
+	}
+
+	public float toWorldY(int screenY){
+		return  screenY - yOffset;
+	}
 	
 	public float getXOffset() {
 		return xOffset;
