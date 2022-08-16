@@ -6,7 +6,7 @@ import com.raycast.project.environment.camera.ViewCamera;
 import com.raycast.project.environment.entities.*;
 import com.raycast.project.environment.entities.utils.EntityModification;
 import com.raycast.project.environment.entities.utils.Shape;
-import com.raycast.project.environment.ui.PopupOptionsUI;
+import com.raycast.project.environment.ui.PopupOptionPane;
 import com.raycast.project.environment.world.World;
 import com.raycast.project.input.KeyManager;
 import com.raycast.project.input.MouseManager;
@@ -29,21 +29,31 @@ public final class MainFunctionalitiesExample {
         World world = viewController.getHandler().getWorld();
         addEntitiesToWorld(world);
 
-        // Select which type of entity you want to add to the world
-        new PopupOptionsUI("Ray-Cast 2D", "Which entity you would like to test?",
-                new PopupOptionsUI.PopupOption("RayCastPointEntity") {
+        selectWhichEntityToUse(viewController);
+    }
+
+    /**
+     * Creates a {@link com.raycast.project.environment.ui.PopupOptionPane} asks which type of entity will be added to the world.
+     *
+     * @param viewController
+     */
+    private static void selectWhichEntityToUse(ViewController viewController) {
+        World world = viewController.getHandler().getWorld();
+
+        new PopupOptionPane("Ray-Cast 2D", "Which entity you would like to test?",
+                new PopupOptionPane.PopupOption("RayCastPointEntity") {
                     @Override
                     public void onClick() {
                         rayCastPointEntity(world);
                     }
                 },
-                new PopupOptionsUI.PopupOption("LampEntity") {
+                new PopupOptionPane.PopupOption("LampEntity") {
                     @Override
                     public void onClick() {
                         lampEntity(world);
                     }
                 },
-                new PopupOptionsUI.PopupOption("Quit") {
+                new PopupOptionPane.PopupOption("Quit") {
                     @Override
                     public void onClick() {
                         viewController.stop();
@@ -227,15 +237,15 @@ public final class MainFunctionalitiesExample {
 
                 isBeingEdited = true;
 
-                new PopupOptionsUI("Editing entity", "Select an option",
-                        new PopupOptionsUI.PopupOption("Delete") {
+                new PopupOptionPane("Editing entity", "Select an option",
+                        new PopupOptionPane.PopupOption("Delete") {
                             @Override
                             public void onClick() {
                                 isBeingEdited = false;
                                 handler.getWorld().getEntities().remove(entity);
                             }
                         },
-                        new PopupOptionsUI.PopupOption("Cancel") {
+                        new PopupOptionPane.PopupOption("Cancel") {
                             @Override
                             public void onClick() {
                                 isBeingEdited = false;

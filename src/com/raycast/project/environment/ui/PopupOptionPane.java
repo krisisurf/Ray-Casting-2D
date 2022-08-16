@@ -2,9 +2,9 @@ package com.raycast.project.environment.ui;
 
 import javax.swing.*;
 
-public class PopupOptionsUI extends JOptionPane {
+public class PopupOptionPane extends JOptionPane {
 
-    public PopupOptionsUI(String title, String message, PopupOption...options){
+    public PopupOptionPane(String title, String message, PopupOption...options){
         Thread t = new Thread(() -> {
             int result = JOptionPane.showOptionDialog(null,
                     message,
