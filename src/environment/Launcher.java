@@ -4,6 +4,7 @@ import environment.camera.ViewCamera;
 import environment.entities.*;
 import environment.entities.utils.EntityModification;
 import environment.entities.utils.Shape;
+import environment.ui.PopupOptionsUI;
 import environment.world.World;
 import input.KeyManager;
 import input.MouseManager;
@@ -30,25 +31,28 @@ public class Launcher {
         World world = viewController.getHandler().getWorld();
         addEntitiesToWorld(world);
 
-        int result = JOptionPane.showOptionDialog(null,
-                "Which entity you would like to test?",
-                "Ray-Cast 2D",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                new Object[]{"RayCastPointEntity",
-                        "LampEntity",
-                        "Quit"},
-                null);
-
-        if (result == 0)
-            rayCastPointEntity(world);
-        else if (result == 1)
-            lampEntity(world);
-        else if (result == 2 || result == JOptionPane.CLOSED_OPTION) {
-            viewController.stop();
-            System.exit(1);
-        }
+        // Select which type of entity you want to add to the world
+        new PopupOptionsUI("Ray-Cast 2D", "Which entity you would like to test?",
+                new PopupOptionsUI.PopupOption("RayCastPointEntity") {
+                    @Override
+                    public void onClick() {
+                        rayCastPointEntity(world);
+                    }
+                },
+                new PopupOptionsUI.PopupOption("LampEntity") {
+                    @Override
+                    public void onClick() {
+                        lampEntity(world);
+                    }
+                },
+                new PopupOptionsUI.PopupOption("Quit") {
+                    @Override
+                    public void onClick() {
+                        viewController.stop();
+                        System.exit(1);
+                    }
+                }
+        );
     }
 
     /**
