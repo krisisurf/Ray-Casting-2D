@@ -15,7 +15,7 @@ public class Launcher {
         ViewController viewController = new ViewController("Ray-Casting-2D DEMO", 1000, 800);
         viewController.start();
 
-        // Preview example of the main functionality
+        // Example of the main functionalities
         MainFunctionalitiesExample.run(viewController);
     }
 }
