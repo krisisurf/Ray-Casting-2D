@@ -3,7 +3,7 @@ Basic REAL-TIME raycasting system for 2D environment made in java. </br>
 You can use (W, A, S, D) keys to move the RayCastingPointEntity or LampEntity. </br>
 <sub>NOTE: A more detailed object-oriented structure might exist because the original idea wasn't exactly like it is now.</sub>
 
-***The main things to play with are documented demonstrated in the main class ( src/environment/Launcher.java )***
+***The main things to play with are documented demonstrated in: src/example/MainFunctionalityExample.java ***
 </br></br>
 </br>
 
