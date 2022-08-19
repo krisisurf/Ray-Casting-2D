@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class PopupOptionPane extends JOptionPane {
 
-    public PopupOptionPane(String title, String message, PopupOption...options){
+    public PopupOptionPane(String title, String message, PopupOption closeOption, PopupOption... options) {
         Thread t = new Thread(() -> {
             int result = JOptionPane.showOptionDialog(null,
                     message,
@@ -15,13 +15,16 @@ public class PopupOptionPane extends JOptionPane {
                     options,
                     null);
 
-            options[result].onClick();
+            if (result == -1)
+                closeOption.onClick();
+            else
+                options[result].onClick();
         });
 
         t.start();
     }
 
-    public static abstract class PopupOption{
+    public static abstract class PopupOption {
         private String text;
 
         public PopupOption(String text) {

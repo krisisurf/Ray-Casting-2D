@@ -41,6 +41,7 @@ public final class MainFunctionalitiesExample {
         World world = viewController.getHandler().getWorld();
 
         new PopupOptionPane("Ray-Cast 2D", "Which entity you would like to test?",
+                null,
                 new PopupOptionPane.PopupOption("RayCastPointEntity") {
                     @Override
                     public void onClick() {
@@ -237,7 +238,15 @@ public final class MainFunctionalitiesExample {
 
                 isBeingEdited = true;
 
+                PopupOptionPane.PopupOption cancelOption = new PopupOptionPane.PopupOption("Cancel") {
+                    @Override
+                    public void onClick() {
+                        isBeingEdited = false;
+                    }
+                };
+
                 new PopupOptionPane("Editing entity", "Select an option",
+                        cancelOption,
                         new PopupOptionPane.PopupOption("Delete") {
                             @Override
                             public void onClick() {
@@ -245,12 +254,7 @@ public final class MainFunctionalitiesExample {
                                 handler.getWorld().getEntities().remove(entity);
                             }
                         },
-                        new PopupOptionPane.PopupOption("Cancel") {
-                            @Override
-                            public void onClick() {
-                                isBeingEdited = false;
-                            }
-                        }
+                        cancelOption
                 );
             }
 
